@@ -1,38 +1,42 @@
--- RAW layer schema
-create schema if not exists raw;
+-- BigQuery DDL (run in BigQuery console or via bq)
+-- Dataset
+CREATE SCHEMA IF NOT EXISTS `commerce-data-platform-484619.raw`;
 
 -- USERS
-create table if not exists raw.users (
-    user_id          int                not null,
-    batch_date       date               not null,
-    source           text               not null,
-    extracted_at     timestamptz        not null,
-    loaded_at        timestamptz        not null,        default,        now(),
-    payload_hash     text               not null,
-    payload          jsonb              not null,
-    primary key (user_id, batch_date)
-);
+CREATE TABLE IF NOT EXISTS `commerce-data-platform-484619.raw.users` (
+  user_id       INT64 NOT NULL,
+  batch_date    DATE NOT NULL,
+  source        STRING NOT NULL,
+  extracted_at  TIMESTAMP NOT NULL,
+  loaded_at     TIMESTAMP NOT NULL,
+  payload_hash  STRING NOT NULL,
+  payload       JSON NOT NULL
+)
+PARTITION BY batch_date
+CLUSTER by user_id;
 
 -- PRODUCTS
-create table if not exists raw.products (
-    product_id       int                 not null,
-    batch_date       date               not null,
-    source           text               not null,
-    extracted_at     timestamptz        not null,
-    loaded_at        timestamptz        not null,        default,        now(),
-    payload_hash     text               not null,
-    payload          jsonb              not null,
-    primary key (product_id, batch_date)
-);
-
--- CARTS (orders)
-create table if not exists raw.carts (
-    cart_id       int                 not null,
-    batch_date       date               not null,
-    source           text               not null,
-    extracted_at     timestamptz        not null,
-    loaded_at        timestamptz        not null,        default,        now(),
-    payload_hash     text               not null,
-    payload          jsonb              not null,
-    primary key (cart_id, batch_date)
+CREATE TABLE IF NOT EXISTS `commerce-data-platform-484619.raw.products` (
+  product_id    INT64 NOT NULL,
+  batch_date    DATE NOT NULL,
+  source        STRING NOT NULL,
+  extracted_at  TIMESTAMP NOT NULL,
+  loaded_at     TIMESTAMP NOT NULL,
+  payload_hash  STRING NOT NULL,
+  payload       JSON NOT NULL
 )
+PARTITION BY batch_date
+CLUSTER by product_id;
+
+-- CARTS
+CREATE TABLE IF NOT EXISTS `commerce-data-platform-484619.raw.carts` (
+  cart_id       INT64 NOT NULL,
+  batch_date    DATE NOT NULL,
+  source        STRING NOT NULL,
+  extracted_at  TIMESTAMP NOT NULL,
+  loaded_at     TIMESTAMP NOT NULL,
+  payload_hash  STRING NOT NULL,
+  payload       JSON NOT NULL
+)
+PARTITION BY batch_date
+CLUSTER by cart_id;
