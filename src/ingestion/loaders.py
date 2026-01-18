@@ -140,7 +140,7 @@ def ingest_entity_to_raw(
         return 0
     
     # Use a temp table name that's safe + unique-ish
-    temp_table = f"_stg_{entity_name}_{batch_date.isoformat().replace("-", "")}"
+    temp_table = f"_stg_{entity_name}_{batch_date.isoformat().replace('-', '')}"
     temp_fqid = load_to_temp_table(client, project_id, raw_dataset, temp_table, rows)
 
     merge_into_raw(
