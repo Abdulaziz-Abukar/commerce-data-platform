@@ -1,0 +1,67 @@
+version: 2
+
+models:
+  - name: dim_user
+    columns:
+      - name: user_key
+        tests: [not_null, unique]
+      - name: user_id
+        tests: [not_null, unique]
+
+  - name: dim_product
+    columns:
+      - name: product_key
+        tests: [not_null, unique]
+      - name: product_id
+        tests: [not_null, unique]
+
+  - name: dim_date
+    columns:
+      - name: date_key
+        tests: [not_null, unique]
+      - name: date
+        tests: [not_null, unique]
+
+  - name: fct_orders
+    columns:
+      - name: order_id
+        tests: [not_null, unique]
+      - name: user_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_user')
+              field: user_key
+      - name: date_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+      - name: snapshot_date
+        tests: [not_null]
+
+  - name: fct_order_items
+    columns:
+      - name: order_item_id
+        tests: [not_null, unique]
+      - name: order_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('fct_orders')
+              field: order_id
+      - name: product_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_key
+      - name: date_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+      - name: snapshot_date
+        tests: [not_null]

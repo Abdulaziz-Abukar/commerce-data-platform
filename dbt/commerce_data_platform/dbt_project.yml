@@ -30,4 +30,10 @@ clean-targets: # directories to be removed by `dbt clean`
 models:
   commerce_data_platform:
     # Config indicated by + and applies to all files under models/example/
-    +materialized: view
+    staging:
+      +schema: analytics_stg
+      +materialized: view
+
+    marts:
+      +schema: analytics_mart
+      +materialized: view
