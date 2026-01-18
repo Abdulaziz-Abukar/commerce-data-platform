@@ -27,7 +27,7 @@ final as (
         cast(json_value(payload, '$.address.city') as string) as city,
         cast(json_value(payload, '$.address.state') as string) as state,
         cast(json_value(payload, '$.address.postalCode') as string) as postal_code,
-        cast(json_value(payload, '$.country') as string) as country,
+        cast(json_value(payload, '$.address.country') as string) as country,
 
         -- keep lineage metadata
         source,

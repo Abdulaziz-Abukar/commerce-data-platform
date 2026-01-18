@@ -1,7 +1,7 @@
 with src as (
     select
         cart_id,
-        batch_date,
+        cast(batch_date as date) as snapshot_date,
         source,
         extracted_at,
         loaded_at,
@@ -13,7 +13,7 @@ with src as (
 exploded as (
     select 
         cart_id as order_id,
-        batch_date,
+        snapshot_date,
         cast(json_value(payload, '$.userId') as int64) as user_id,
 
         -- each item in products[]
@@ -25,7 +25,7 @@ exploded as (
 final as (
     select
         order_id,
-        batch_date,
+        snapshot_date,
         user_id,
 
         safe_cast(json_value(item, '$.id') as int64) as product_id,

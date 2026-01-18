@@ -1,7 +1,7 @@
 with src as (
     select
         cart_id,
-        batch_date,
+        cast(batch_date as date) as snapshot_date,
         source,
         extracted_at,
         loaded_at,
@@ -13,7 +13,7 @@ with src as (
 final as (
     select
         cart_id,
-        batch_date,
+        snapshot_date,
 
         -- extract from JSON payload
         cast(json_value(payload, '$.userId') as int64) as user_id,
