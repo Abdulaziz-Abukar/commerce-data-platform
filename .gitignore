@@ -1,2 +1,5 @@
-commerce-data-platform-*.json
+
+target/
+dbt_packages/
+logs/
 __pycache__/

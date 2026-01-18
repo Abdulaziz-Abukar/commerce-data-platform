@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: stg_users
+    description: "Cleaned user records extracted from raw.users JSON payloads"
+    columns:
+      - name: user_id
+        tests:
+          - not_null
+
+  - name: stg_products
+    description: "Cleaned product records extracted from raw.products JSON payloads"
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+
+  - name: stg_carts
+    description: "Order-level cart records extracted from raw.carts"
+    columns:
+      - name: cart_id
+        tests:
+          - not_null
+
+  - name: stg_cart_items
+    description: "Line items exploded from carts.products[]"
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+
+      - name: product_id
+        tests:
+          - not_null
