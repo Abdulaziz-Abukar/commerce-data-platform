@@ -1,0 +1,12 @@
+commerce_data_platform:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      project: "{{ env_var('GCP_PROJECT_ID') }}"
+      dataset: analytics
+      location: "{{ env_var('BQ_LOCATION', 'US') }}"
+      keyfile: /opt/airflow/keys/service-account.json
+      job_execution_timeout_seconds: 300
+      threads: 4
