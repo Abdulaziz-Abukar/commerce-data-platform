@@ -1,0 +1,42 @@
+services:
+  airflow:
+    build: .
+    container_name: airflow
+    restart: always
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=False
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+
+      # Make these available to ingestion + dbt commands
+      - GCP_PROJECT_ID=${GCP_PROJECT_ID}
+      - BQ_RAW_DATASET=${BQ_RAW_DATASET}
+      - BQ_LOCATION=${BQ_LOCATION}
+      - API_BASE_URL=${API_BASE_URL}
+      - SOURCE_NAME=${SOURCE_NAME}
+
+      # BigQuery auth (service account file in container)
+      - GOOGLE_APPLICATION_CREDENTIALS=/opt/airflow/keys/service-account.json
+
+    volumes:
+      # Mount DAGs
+      - ./dags:/opt/airflow/dags
+
+      # Mount repo so airflow can run ingestion + dbt
+      - ..:/opt/airflow/repo
+
+      # Mount service account key
+      - ../.secrets/service-account.json:/opt/airflow/keys/service-account.json:ro
+
+      # Mount dbt profiles.yml for container dbt runs
+      - ../dbt/profiles.yml:/opt/airflow/.dbt/profiles.yml:ro
+
+    ports:
+      - "8080:8080"
+
+    command: >
+      bash -c "
+      airflow db init &&
+      airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com || true &&
+      airflow webserver & airflow scheduler
+      "
